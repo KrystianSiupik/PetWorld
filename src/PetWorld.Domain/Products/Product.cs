@@ -10,6 +10,15 @@ public sealed class Product
     public ProductDescription Description { get; }
     public Money Price { get; }
 
+    private Product(Guid id, ProductName name, ProductCategory category, ProductDescription description)
+    {
+        Id = id;
+        Name = name;
+        Category = category;
+        Description = description;
+        Price = null!;
+    }
+
     private Product(Guid id, ProductName name, ProductCategory category, ProductDescription description, Money price)
     {
         Id = id;
