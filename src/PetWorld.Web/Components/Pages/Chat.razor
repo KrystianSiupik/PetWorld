@@ -1,0 +1,67 @@
+@page "/"
+@rendermode InteractiveServer
+@using PetWorld.Application.Chat.Abstractions
+@using PetWorld.Application.Chat.Models
+@inject IAskQuestionHandler AskQuestionHandler
+
+<PageTitle>PetWorld — Chat</PageTitle>
+
+<h1>Chat z konsultantem PetWorld</h1>
+
+<div class="chat-input">
+    <textarea @bind="_question" @bind:event="oninput" rows="3"
+              placeholder="Zadaj pytanie o produkty dla swojego zwierzaka..."
+              disabled="@_isLoading"></textarea>
+    <button class="btn btn-primary" @onclick="SendAsync"
+            disabled="@(_isLoading || string.IsNullOrWhiteSpace(_question))">
+        Wyślij
+    </button>
+</div>
+
+@if (_isLoading)
+{
+    <p class="chat-loading">Myślę…</p>
+}
+
+@if (_result is not null)
+{
+    <div class="chat-answer">
+        <p style="white-space: pre-wrap;">@_result.Answer</p>
+        <p class="chat-iterations">Liczba iteracji Writer-Critic: @_result.Iterations</p>
+    </div>
+}
+
+@if (_error is not null)
+{
+    <p class="chat-error">@_error</p>
+}
+
+@code {
+    private string _question = string.Empty;
+    private bool _isLoading;
+    private ChatResult? _result;
+    private string? _error;
+
+    private async Task SendAsync()
+    {
+        if (string.IsNullOrWhiteSpace(_question))
+            return;
+
+        _isLoading = true;
+        _error = null;
+        _result = null;
+
+        try
+        {
+            _result = await AskQuestionHandler.HandleAsync(_question, CancellationToken.None);
+        }
+        catch (Exception)
+        {
+            _error = "Wystąpił błąd podczas generowania odpowiedzi. Spróbuj ponownie.";
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+}
