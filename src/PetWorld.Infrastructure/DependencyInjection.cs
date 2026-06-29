@@ -18,7 +18,7 @@ public static class DependencyInjection
 
         services.AddScoped<IChatRepository, ChatRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
-        services.AddScoped<ProductSearchTool>();
+        services.AddScoped<ProductCatalogTool>();
         services.AddScoped<IWriterAgent, WriterAgent>();
         services.AddScoped<ICriticAgent, CriticAgent>();
         services.AddScoped<ProductCatalogSeeder>();

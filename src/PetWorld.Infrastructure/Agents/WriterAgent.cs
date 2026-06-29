@@ -12,23 +12,23 @@ public sealed class WriterAgent : IWriterAgent
         produkty dla ich zwierząt.
 
         Zasady:
-        - Aby polecić produkty, użyj narzędzia SearchProducts z trafnym zapytaniem.
-        - Polecaj WYŁĄCZNIE produkty zwrócone przez SearchProducts; podaj nazwę i krótkie
-          uzasadnienie dopasowania.
-        - Jeśli narzędzie nie zwróci pasujących produktów lub nie masz pewności — powiedz
-          to wprost. NIE wymyślaj produktów spoza wyników wyszukiwania.
+        - Użyj narzędzia GetProducts, aby pobrać pełną listę dostępnych produktów.
+        - Polecaj WYŁĄCZNIE produkty z tej listy; podaj nazwę i krótkie uzasadnienie
+          dopasowania do potrzeby klienta.
+        - Jeśli na liście nie ma niczego pasującego — powiedz to wprost. NIE wymyślaj
+          produktów spoza listy.
         - Odpowiadaj po polsku, rzeczowo i przyjaźnie.
         - Jeśli dostaniesz uwagi recenzenta, popraw odpowiedź zgodnie z nimi.
         """;
 
     private readonly AIAgent _agent;
 
-    public WriterAgent(IChatClient chatClient, ProductSearchTool productSearchTool)
+    public WriterAgent(IChatClient chatClient, ProductCatalogTool productCatalogTool)
     {
         _agent = chatClient.AsAIAgent(
             name: "Writer",
             instructions: Instructions,
-            tools: [AIFunctionFactory.Create(productSearchTool.SearchProducts)]);
+            tools: [AIFunctionFactory.Create(productCatalogTool.GetProducts)]);
     }
 
     public async Task<AssistantAnswer> WriteAsync(CustomerQuestion question, string? criticFeedback, CancellationToken cancellationToken)
