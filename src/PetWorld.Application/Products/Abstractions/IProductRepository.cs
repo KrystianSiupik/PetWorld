@@ -4,5 +4,5 @@ namespace PetWorld.Application.Products.Abstractions;
 
 public interface IProductRepository
 {
-    Task<IReadOnlyList<Product>> SearchAsync(string query, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Product>> GetAllAsync(CancellationToken cancellationToken);
 }
