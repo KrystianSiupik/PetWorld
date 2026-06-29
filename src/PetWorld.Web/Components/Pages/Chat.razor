@@ -3,6 +3,7 @@
 @using PetWorld.Application.Chat.Abstractions
 @using PetWorld.Application.Chat.Models
 @inject IAskQuestionHandler AskQuestionHandler
+@inject ILogger<Chat> Logger
 
 <PageTitle>PetWorld — Chat</PageTitle>
 
@@ -55,8 +56,9 @@
         {
             _result = await AskQuestionHandler.HandleAsync(_question, CancellationToken.None);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to generate a chat answer.");
             _error = "Wystąpił błąd podczas generowania odpowiedzi. Spróbuj ponownie.";
         }
         finally
