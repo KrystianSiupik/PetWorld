@@ -14,7 +14,13 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<PetWorldDbContext>(options =>
-            options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 0))));
+            options.UseMySql(
+                connectionString,
+                new MySqlServerVersion(new Version(8, 0, 0)),
+                mySqlOptions => mySqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 10,
+                    maxRetryDelay: TimeSpan.FromSeconds(10),
+                    errorNumbersToAdd: null)));
 
         services.AddScoped<IChatRepository, ChatRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
