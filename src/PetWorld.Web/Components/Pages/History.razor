@@ -11,15 +11,15 @@
 
 @if (_items is null)
 {
-    <p>Ładowanie…</p>
+    <p class="history-status">Ładowanie…</p>
 }
 else if (_items.Count == 0)
 {
-    <p>Brak historii.</p>
+    <p class="history-status">Brak historii.</p>
 }
 else
 {
-    <QuickGrid Items="@_items.AsQueryable()" Pagination="@_pagination">
+    <QuickGrid class="history-grid" Items="@_items.AsQueryable()" Pagination="@_pagination">
         <PropertyColumn Property="@(item => item.Date.ToLocalTime())" Title="Data" Format="yyyy-MM-dd HH:mm" Sortable="true" />
         <PropertyColumn Property="@(item => item.Question)" Title="Pytanie" />
         <PropertyColumn Property="@(item => item.Answer)" Title="Odpowiedź" />
