@@ -1,0 +1,40 @@
+@page "/history"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using PetWorld.Application.Chat.Abstractions
+@using PetWorld.Application.Chat.Models
+@inject IGetChatHistoryHandler GetChatHistoryHandler
+
+<PageTitle>PetWorld — Historia</PageTitle>
+
+<h1>Historia rozmów</h1>
+
+@if (_items is null)
+{
+    <p>Ładowanie…</p>
+}
+else if (_items.Count == 0)
+{
+    <p>Brak historii.</p>
+}
+else
+{
+    <QuickGrid Items="@_items.AsQueryable()" Pagination="@_pagination">
+        <PropertyColumn Property="@(item => item.Date.ToLocalTime())" Title="Data" Format="yyyy-MM-dd HH:mm" Sortable="true" />
+        <PropertyColumn Property="@(item => item.Question)" Title="Pytanie" />
+        <PropertyColumn Property="@(item => item.Answer)" Title="Odpowiedź" />
+        <PropertyColumn Property="@(item => item.Iterations)" Title="Liczba iteracji" Sortable="true" />
+    </QuickGrid>
+
+    <Paginator State="@_pagination" />
+}
+
+@code {
+    private IReadOnlyList<ChatHistoryItem>? _items;
+    private readonly PaginationState _pagination = new() { ItemsPerPage = 10 };
+
+    protected override async Task OnInitializedAsync()
+    {
+        _items = await GetChatHistoryHandler.HandleAsync(CancellationToken.None);
+    }
+}
