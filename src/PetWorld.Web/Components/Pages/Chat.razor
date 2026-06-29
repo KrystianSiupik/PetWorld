@@ -13,7 +13,7 @@
     <textarea @bind="_question" @bind:event="oninput" rows="3"
               placeholder="Zadaj pytanie o produkty dla swojego zwierzaka..."
               disabled="@_isLoading"></textarea>
-    <button class="btn btn-primary" @onclick="SendAsync"
+    <button @onclick="SendAsync"
             disabled="@(_isLoading || string.IsNullOrWhiteSpace(_question))">
         Wyślij
     </button>
